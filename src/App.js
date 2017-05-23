@@ -3,8 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 
 class Search extends Component {
-  findPokemon = () => {
-      console.log("you entered", this.searchValue.value)
+  runSearch = () => {
+    this.props.searchFunction(this.searchValue.value)
   }
 
   render () {
@@ -14,7 +14,7 @@ class Search extends Component {
           ref={(element) => { this.searchValue = element }}
           placeholder="Enter a Pokeman"
         />
-        <button onClick={this.findPokemon}>Who's that Pokemon?</button>
+        <button onClick={this.runSearch}>Who's that Pokemon?</button>
       </div>
     )
   }
@@ -33,18 +33,32 @@ class Pokecard extends Component {
 }
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+
+  }
+  findPokemon = (searchTerm) => {
+
+      fetch(`http://pokeapi.co/api/v2/pokemon/${searchTerm}`).then((response)=> {
+          return response.json()
+      }).then((json)=> {
+        this.setState({pokemanNumber: json.id})
+      })
+  }
+
   render() {
     return (
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Pokepedia</h2>
-          <Search />
+          <Search searchFunction={this.findPokemon}/>
         </div>
         <Pokecard
           imgSrc="https://s-media-cache-ak0.pinimg.com/originals/e8/e7/b7/e8e7b71dc7349968cfa88364194d97e9.jpg"
           pokemanName="A cute Pikachu"
-          pokemanNumber="25"
+          pokemanNumber={this.state.pokemanNumber}
         />
       </div>
     );
