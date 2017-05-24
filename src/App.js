@@ -24,7 +24,7 @@ class Pokecard extends Component {
   render () {
     return (
       <div>
-        <img src={this.props.imgSrc}/>
+        <img src={this.props.imgSrc} style={{ height: 200 }}/>
         <h2>{this.props.pokemanName}</h2>
         <p>{this.props.pokemanNumber}</p>
       </div>
@@ -32,19 +32,26 @@ class Pokecard extends Component {
   }
 }
 
+const responseToJSON = (response)=> {
+  return response.json()
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-
   }
-  findPokemon = (searchTerm) => {
 
-      fetch(`http://pokeapi.co/api/v2/pokemon/${searchTerm}`).then((response)=> {
-          return response.json()
-      }).then((json)=> {
-        this.setState({pokemanNumber: json.id})
-      })
+  findPokemon = (searchTerm) => {
+    fetch(`https://pokeapi.co/api/v2/pokemon/${searchTerm}`)
+    .then(responseToJSON)
+    .then((json)=> {
+      console.log('I received', json);
+      this.setState({ pokemanNumber: json.id });
+      this.setState({ pokemanName: json.name });
+      this.setState({ imgSrc: json.sprites.back_default });
+    })
+    .catch(e => console.error(e));
   }
 
   render() {
@@ -56,8 +63,8 @@ class App extends Component {
           <Search searchFunction={this.findPokemon}/>
         </div>
         <Pokecard
-          imgSrc="https://s-media-cache-ak0.pinimg.com/originals/e8/e7/b7/e8e7b71dc7349968cfa88364194d97e9.jpg"
-          pokemanName="A cute Pikachu"
+          imgSrc={this.state.imgSrc}
+          pokemanName={this.state.pokemanName}
           pokemanNumber={this.state.pokemanNumber}
         />
       </div>
