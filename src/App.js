@@ -1,36 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
-class Search extends Component {
-  runSearch = () => {
-    this.props.searchFunction(this.searchValue.value)
-  }
-
-  render () {
-    return (
-      <div>
-        <input
-          ref={(element) => { this.searchValue = element }}
-          placeholder="Enter a Pokeman"
-        />
-        <button onClick={this.runSearch}>Who's that Pokemon?</button>
-      </div>
-    )
-  }
-}
-
-class Pokecard extends Component {
-  render () {
-    return (
-      <div>
-        <img src={this.props.imgSrc} style={{ height: 200 }}/>
-        <h2>{this.props.pokemanName}</h2>
-        <p>{this.props.pokemanNumber}</p>
-      </div>
-    )
-  }
-}
+import Pokecard from './Pokecard';
+import Search from './Search';
 
 const responseToJSON = (response)=> {
   return response.json()
@@ -49,7 +21,7 @@ class App extends Component {
       console.log('I received', json);
       this.setState({ pokemanNumber: json.id });
       this.setState({ pokemanName: json.name });
-      this.setState({ imgSrc: json.sprites.back_default });
+      this.setState({ imgSrc: json.sprites.front_default });
     })
     .catch(e => console.error(e));
   }
