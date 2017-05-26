@@ -17,11 +17,18 @@ class App extends Component {
   findPokemon = (searchTerm) => {
     fetch(`https://pokeapi.co/api/v2/pokemon/${searchTerm}`)
     .then(responseToJSON)
-    .then((json)=> {
+    .then((json) => {
       console.log('I received', json);
       this.setState({ pokemanNumber: json.id });
       this.setState({ pokemanName: json.name });
       this.setState({ imgSrc: json.sprites.front_default });
+      return json.species.url;
+    }).then((speciesUrl) => {
+      return fetch(speciesUrl);
+    }).then(responseToJSON).then((json) => {
+      console.log('Species info', json);
+      const flavorText = json.flavor_text_entries.find(entry=>entry.language.name==="en")
+      this.setState({ description: flavorText.flavor_text })
     })
     .catch(e => console.error(e));
   }
@@ -38,6 +45,7 @@ class App extends Component {
           imgSrc={this.state.imgSrc}
           pokemanName={this.state.pokemanName}
           pokemanNumber={this.state.pokemanNumber}
+          pokemanDescription={this.state.description}
         />
       </div>
     );

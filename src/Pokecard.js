@@ -7,6 +7,7 @@ class Pokecard extends Component {
         <img src={this.props.imgSrc} style={{ height: 200 }}/>
         <h2>{this.props.pokemanName}</h2>
         <p>{this.props.pokemanNumber}</p>
+        <p>{this.props.pokemanDescription}</p>
       </div>
     )
   }
